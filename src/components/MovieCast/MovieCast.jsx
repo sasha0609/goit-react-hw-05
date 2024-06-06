@@ -1,4 +1,3 @@
-import { Toaster } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getCastApi } from "../../tmdbApi";
@@ -18,9 +17,7 @@ export default function MovieCast() {
         setCast(castData);
         setLoading(false);
       } catch (error) {
-        toast.error("Oops! Please try again!", {
-          position: "top-left",
-        });
+        console.log("Oops! Please try again!");
         setError(true);
       } finally {
         setLoading(false);
@@ -30,7 +27,6 @@ export default function MovieCast() {
   }, [movieId]);
   return (
     <div>
-      <Toaster />
       <h2>Cast</h2>
       {error && <p>Oops! Try again</p>}
       {loading && <p>Loading...</p>}

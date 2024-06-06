@@ -1,4 +1,3 @@
-import { Toaster } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getReviewsApi } from "../../tmdbApi";
@@ -17,9 +16,7 @@ export default function MovieReviews() {
         setReviews(reviewsData);
         setLoading(false);
       } catch (error) {
-        toast.error("Oops! Please try again!", {
-          position: "top-left",
-        });
+        console.log("Oops! Please try again!");
         setError(true);
       } finally {
         setLoading(false);
@@ -29,7 +26,6 @@ export default function MovieReviews() {
   }, [movieId]);
   return (
     <div>
-      <Toaster />
       <h2>Reviews</h2>
       {error && <p>Oops! Try again</p>}
       {loading && <p>Loading...</p>}

@@ -1,14 +1,19 @@
-import { NavLink, Outlet, useParams } from "react-router-dom";
+import {
+  NavLink,
+  Link,
+  Outlet,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
 import { fetchMovieDetails } from "../../tmdbApi";
-import toast, { Toaster } from "react-hot-toast";
 
 export default function MoviesDetailsPage() {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const location = useLocation();
   useEffect(() => {
     const getMovieDetails = async () => {
       try {
@@ -18,9 +23,7 @@ export default function MoviesDetailsPage() {
         setMovie(movieData);
         setLoading(false);
       } catch (error) {
-        toast.error("Oops! Please try again!", {
-          position: "top-left",
-        });
+        console.log("Oops! Please try again!");
         setError(true);
       } finally {
         setLoading(false);
@@ -35,9 +38,11 @@ export default function MoviesDetailsPage() {
 
   return (
     <div>
-      <Toaster />
       {error && <p>Oops! Try again</p>}
       {loading && <p>Loading...</p>}
+      <p>
+        <Link to={location.state}>Go back</Link>
+      </p>
       <h1>{movie.title}</h1>
       <img
         src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}

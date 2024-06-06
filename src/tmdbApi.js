@@ -37,11 +37,9 @@ export const fetchMovieDetails = async (movieId) => {
 
 export const getCastApi = async (movieId) => {
   const response = await api.get(`/movie/${movieId}/credits`);
-  console.log(response.data.cast);
   return response.data.cast;
 };
 export const getReviewsApi = async (movieId) => {
   const response = await api.get(`/movie/${movieId}/reviews`);
-  console.log(response.data.results);
   return response.data.results;
 };

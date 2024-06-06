@@ -1,11 +1,10 @@
 import MovieList from "../../components/MovieList/MovieList";
 import { searchMovies } from "../../tmdbApi";
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { useSearchParams } from "react-router-dom";
 
 export default function MoviesPage() {
   const [movies, setMovies] = useState([]);
-  const [query, setQuery] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -17,40 +16,36 @@ export default function MoviesPage() {
       setMovies(searchResults);
       setLoading(false);
     } catch (error) {
-      toast.error("Oops! Please try again!", {
-        position: "top-left",
-      });
+      console.log("Oops! Please try again!");
       setError(true);
     } finally {
       setLoading(false);
     }
   };
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const form = event.target;
-    const formValue = form.elements.formValue.value.trim();
-    if (formValue.trim() === "") {
-      toast.error("Please fill the field!");
-      return;
-    }
-    setQuery(formValue);
-    getApiMovie(formValue);
-    form.reset();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queryFilter = searchParams.get("query") ?? "";
+
+  const changeQueryFilter = (newFilter) => {
+    searchParams.set("query", newFilter);
+    setSearchParams(searchParams);
+  };
+  const handleSearch = () => {
+    getApiMovie(queryFilter);
   };
   return (
     <div>
-      <Toaster />
-
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="formValue"
-          autoComplete="off"
-          autoFocus
-          placeholder="Search movie"
-        />
-        <button type="submit">Search</button>
-      </form>
+      <input
+        type="text"
+        value={queryFilter}
+        autoComplete="off"
+        placeholder="Search movie"
+        autoFocus
+        onChange={(e) => changeQueryFilter(e.target.value)}
+      />
+      <button onClick={handleSearch} type="submit">
+        Search
+      </button>
       {error && <p>Oops! Try again</p>}
       {loading && <p>Loading...</p>}
       {movies.length > 0 && <MovieList gettedMovies={movies} />}
